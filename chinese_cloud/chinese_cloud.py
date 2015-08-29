@@ -1,8 +1,8 @@
 from random import Random, random
 from integral_occupancy_map import IntegralOccupancyMap
 from PIL import Image
-import ImageDraw
-import ImageFont
+from PIL import ImageDraw
+from PIL import ImageFont
 import jieba
 import numpy
 import codecs
