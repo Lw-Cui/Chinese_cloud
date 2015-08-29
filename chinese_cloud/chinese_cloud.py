@@ -10,10 +10,11 @@ import re
 
 class ChineseCloud(object):
 
-    def __init__(self, width=600, height=300, max_font=200):
+    def __init__(self, width=600, height=300, max_font=100, min_font=30):
         self.width = width
         self.height = height
         self.max_font = max_font
+        self.min_font = min_font
         self.image = None
         self.frequencies = None
 
@@ -43,19 +44,21 @@ class ChineseCloud(object):
         last_fre = 1.0
         for word, fre in self.frequencies:
             font_size = int(fre / last_fre * self.max_font)
-            font = ImageFont.truetype('DroidSansFallbackFull.ttf', font_size)
-            draw.setfont(font)
-            box_size = draw.textsize(word)
 
             result = None
             while True:
+                font = ImageFont.truetype('DroidSansFallbackFull.ttf', font_size)
+                draw.setfont(font)
+                box_size = draw.textsize(word)
                 result = occupancy.sample_position(box_size[1], box_size[0], Random())
-                if result is not None or font_size == 0:
+                if result is not None or font_size < self.min_font:
                     break
-                font_size -= 1
+                font_size -= 2
 
             if result is None:
                 return self
+            elif font_size < self.min_font:
+                break
             x, y = numpy.array(result)
             draw.text((y, x), word, fill='white')
             occupancy.update(numpy.asarray(self.image), x, y)
