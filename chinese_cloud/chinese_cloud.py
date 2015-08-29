@@ -60,7 +60,7 @@ class ChineseCloud(object):
             elif font_size < self.min_font:
                 break
             x, y = numpy.array(result)
-            draw.text((y, x), word, fill='white')
+            draw.text((y, x), word, fill='red')
             occupancy.update(numpy.asarray(self.image), x, y)
             last_fre = fre
         return self

@@ -1,2 +1,5 @@
 .idea
 *.pyc
+build
+chinese_cloud/query_integral_image.so
+example/constitution.txt
