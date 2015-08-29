@@ -6,4 +6,4 @@ from chinese_cloud.chinese_cloud import ChineseCloud
 
 text_dir = path.dirname(__file__)
 text = open(path.join(text_dir, 'article')).read()
-chinese_cloud = ChineseCloud().generate(text)
+chinese_cloud = ChineseCloud().generate(text).to_image('a.png')
