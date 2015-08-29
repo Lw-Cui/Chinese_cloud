@@ -1,6 +1,6 @@
 from random import Random, random
 from integral_occupancy_map import IntegralOccupancyMap
-import Image
+from PIL import Image
 import ImageDraw
 import ImageFont
 import jieba
@@ -22,6 +22,7 @@ class ChineseCloud(object):
         self.min_font = min_font
         self.image = None
         self.frequencies = None
+        self.layout = None
         self.stopwords = STOPWORDS
 
     def get_count(self, seg_list):
@@ -47,8 +48,10 @@ class ChineseCloud(object):
         draw = ImageDraw.ImageDraw(self.image)
         occupancy = IntegralOccupancyMap(self.height, self.width)
         last_fre = 1.0
+        font_sizes, positions, orientations, colors = [], [], [], []
         for word, fre in self.frequencies:
             font_size = int(fre / last_fre * self.max_font)
+            orientation = None
 
             result = None
             while True:
@@ -65,14 +68,18 @@ class ChineseCloud(object):
                     break
                 font_size -= 2
 
-            if result is None:
-                return self
-            elif font_size < self.min_font:
+            if font_size < self.min_font:
                 break
             x, y = numpy.array(result)
-            draw.text((y, x), word, fill='red')
+            draw.text((y, x), word, fill='white')
             occupancy.update(numpy.asarray(self.image), x, y)
+            positions.append((x, y))
+            orientations.append(orientation)
+            font_sizes.append(font_size)
+            colors.append("hsl(%d, 80%%, 50%%)" % Random().randint(0, 255))
             last_fre = fre
+
+        self.layout = list(zip(self.frequencies, font_sizes, positions, orientations, colors))
         return self
 
     def generate(self, text):
@@ -82,6 +89,14 @@ class ChineseCloud(object):
         return self
 
     def to_image(self, filename):
-        #self.image.save(filename)
-        self.image.show()
+        img = Image.new('RGB', (self.width, self.height), 'white')
+        draw = ImageDraw.Draw(img)
+        for (word, count), font_size, position, orientation, color in self.layout:
+            font = ImageFont.truetype('DroidSansFallbackFull.ttf', font_size)
+            transposed_font = ImageFont.TransposedFont(font, orientation=orientation)
+            draw.setfont(transposed_font)
+            pos = (position[1], position[0])
+            draw.text(pos, word, fill=color)
+        img.show()
+        img.save(filename)
         return self
