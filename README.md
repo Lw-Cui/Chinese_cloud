@@ -7,7 +7,7 @@ and [word_cloud](https://github.com/amueller/word_cloud)'s contribution**
 这是一个由`python`实现的图云生成器。
 
 ## 使用
-使用 `python setup.py install` 来安装
+使用 `python setup.py install` 来安装模块
 
 ## 截图
 十八大报告的图云

@@ -1,4 +1,4 @@
-from random import Random
+from random import Random, random
 from integral_occupancy_map import IntegralOccupancyMap
 import Image
 import ImageDraw
@@ -15,7 +15,7 @@ STOPWORDS = set([x.strip() for x in
 
 class ChineseCloud(object):
 
-    def __init__(self, width=600, height=300, max_font=100, min_font=30):
+    def __init__(self, width=600, height=300, max_font=80, min_font=30):
         self.width = width
         self.height = height
         self.max_font = max_font
@@ -53,7 +53,12 @@ class ChineseCloud(object):
             result = None
             while True:
                 font = ImageFont.truetype('DroidSansFallbackFull.ttf', font_size)
-                draw.setfont(font)
+                if random() < 0.95:
+                    orientation = None
+                else:
+                    orientation = Image.ROTATE_90
+                transposed_font = ImageFont.TransposedFont(font, orientation=orientation)
+                draw.setfont(transposed_font)
                 box_size = draw.textsize(word)
                 result = occupancy.sample_position(box_size[1], box_size[0], Random())
                 if result is not None or font_size < self.min_font:
