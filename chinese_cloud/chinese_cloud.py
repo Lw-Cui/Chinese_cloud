@@ -5,7 +5,12 @@ import ImageDraw
 import ImageFont
 import jieba
 import numpy
+import codecs
+import os
 import re
+
+STOPWORDS = set([x.strip() for x in
+                 codecs.open(os.path.join(os.path.dirname(__file__), 'stopwords'), encoding='utf8').read().split('\n')])
 
 
 class ChineseCloud(object):
@@ -17,14 +22,14 @@ class ChineseCloud(object):
         self.min_font = min_font
         self.image = None
         self.frequencies = None
+        self.stopwords = STOPWORDS
 
-    @staticmethod
-    def get_count(seg_list):
+    def get_count(self, seg_list):
         is_word = re.compile(ur'^([\w|\u4e00-\u9fa5])+$')
 
         word_list = {}
         for word in seg_list:
-            if is_word.match(word):
+            if is_word.match(word) and word not in self.stopwords:
                 word_list[word] = word_list.get(word, 0) + 1
         return word_list
 
