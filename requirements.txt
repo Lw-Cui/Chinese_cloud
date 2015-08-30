@@ -1,3 +1,4 @@
+chinese-cloud==1.0
 Django==1.8.4
 image==1.4.0
 jieba==0.37
