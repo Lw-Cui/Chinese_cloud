@@ -1,6 +1,6 @@
-chinese-cloud==1.1
+chinese-cloud==1.2
 Django==1.8.4
-image==1.4.0
+image==1.4.1
 jieba==0.37
 numpy==1.9.2
 Pillow==2.9.0
