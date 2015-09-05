@@ -11,6 +11,7 @@ import re
 
 STOPWORDS = set([x.strip() for x in
                  codecs.open(os.path.join(os.path.dirname(__file__), 'stopwords'), encoding='utf8').read().split('\n')])
+FONTPATH = os.path.join(os.path.dirname(__file__), 'DroidSansFallbackFull.ttf')
 
 
 class ChineseCloud(object):
@@ -55,7 +56,7 @@ class ChineseCloud(object):
 
             result = None
             while True:
-                font = ImageFont.truetype('DroidSansFallbackFull.ttf', font_size)
+                font = ImageFont.truetype(FONTPATH, font_size)
                 if random() < 0.95:
                     orientation = None
                 else:
@@ -92,7 +93,7 @@ class ChineseCloud(object):
         img = Image.new('RGB', (self.width, self.height), 'white')
         draw = ImageDraw.Draw(img)
         for (word, count), font_size, position, orientation, color in self.layout:
-            font = ImageFont.truetype('DroidSansFallbackFull.ttf', font_size)
+            font = ImageFont.truetype(FONTPATH, font_size)
             transposed_font = ImageFont.TransposedFont(font, orientation=orientation)
             draw.setfont(transposed_font)
             pos = (position[1], position[0])
