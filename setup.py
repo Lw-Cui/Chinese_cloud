@@ -5,7 +5,7 @@ from distutils.extension import Extension
 
 setup(
     name='chinese_cloud',
-    version='1.1',
+    version='1.1.1',
     ext_modules=[Extension("chinese_cloud.query_integral_image",
                            ["chinese_cloud/query_integral_image.c"])],
     packages=['chinese_cloud'],
