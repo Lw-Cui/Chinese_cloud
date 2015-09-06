@@ -16,7 +16,7 @@ FONTPATH = os.path.join(os.path.dirname(__file__), 'DroidSansFallbackFull.ttf')
 
 class ChineseCloud(object):
 
-    def __init__(self, width=600, height=300, max_font=80, min_font=30):
+    def __init__(self, width=600, height=300, max_font=80, min_font=30, process=None):
         self.width = width
         self.height = height
         self.max_font = max_font
@@ -25,9 +25,13 @@ class ChineseCloud(object):
         self.frequencies = None
         self.layout = None
         self.stopwords = STOPWORDS
+        if process is None:
+            self.process = jieba.cut
+        else:
+            self.process = process
 
     def get_count(self, seg_list):
-        is_word = re.compile(ur'^([\w|\u4e00-\u9fa5])+$')
+        is_word = re.compile(ur'^([\w|\u4e00-\u9fa5|\xb7])+$')
 
         word_list = {}
         for word in seg_list:
@@ -84,7 +88,7 @@ class ChineseCloud(object):
         return self
 
     def generate(self, text):
-        seg_list = jieba.cut(text)
+        seg_list = self.process(text)
         count = self.get_count(seg_list)
         self.set_frequencies(count).generate_pic()
         return self
